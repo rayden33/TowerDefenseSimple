@@ -174,8 +174,8 @@ MonoBehaviour:
   goStart: {fileID: 8591764179892101686, guid: 4192ff4217265b2409060ec87825eab5, type: 3}
   goFinish: {fileID: 8591764179892101686, guid: 8c8c70d7e0a85144dbbc78520432ba95,
     type: 3}
-  mapMatrixX: 10
-  mapMatrixZ: 10
+  goMonster: {fileID: 1666306211098088442, guid: 4e859d2fbe62d2c48bdfe45e9ed9e967,
+    type: 3}
 --- !u!1 &262955422
 GameObject:
   m_ObjectHideFlags: 0
