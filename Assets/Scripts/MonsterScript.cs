@@ -8,9 +8,9 @@ public class MonsterScript : MonoBehaviour
 
     public static int monsterHP;
 
-    private char[,] mapTmp = GlobalData.mapMatrix;
-    private float mapMatrixX = GlobalData.mapMatrixX;
-    private float mapMatrixZ = GlobalData.mapMatrixZ;
+    private char[,] mapTmp;
+    private int mapMatrixX = GlobalData.mapMatrixX;
+    private int mapMatrixZ = GlobalData.mapMatrixZ;
     private float diffX;
     private float diffZ;
     private Vector3 nextDir;
@@ -24,6 +24,17 @@ public class MonsterScript : MonoBehaviour
     private Vector3 getCoordinates(int x, int z)
     {
         return new Vector3(x - diffX, 0, z - diffZ);
+    }
+    private void createPersonalMap()
+    {
+        mapTmp = new char[mapMatrixX, mapMatrixZ];
+        for(int i=0;i<mapMatrixX;i++)
+        {
+            for(int j=0;j<mapMatrixZ;j++)
+            {
+                mapTmp[i,j]=GlobalData.mapMatrix[i,j];
+            }
+        }
     }
     private void findNextPointTarget()
     {
@@ -45,7 +56,8 @@ public class MonsterScript : MonoBehaviour
     }
     private void damageMainTower()
     {
-        GlobalData.playerHP = GlobalData.playerHP - GlobalData.monsterDamage;
+        GlobalData.playerHP -=  GlobalData.monsterDamage;
+        Debug.Log(GlobalData.playerHP);
         selfDestroy();
     }
     private void selfDestroy()
@@ -56,18 +68,31 @@ public class MonsterScript : MonoBehaviour
     }
     void Start()
     {
+        moveSpeed = GlobalData.monsterMovementSpeed;
+        createPersonalMap();
         diffX = (mapMatrixX/2.0f);
         diffZ = (mapMatrixZ/2.0f);
         curX = GlobalData.startX;
         curZ = GlobalData.startZ;
-        monsterHP = GlobalData.monsterHP;
+        monsterHP = GlobalData.monstersHP[int.Parse(transform.name)-1];
         findNextPointTarget();
+
+        //string str;
+        // for(int i=0;i<mapMatrixX;i++)
+        // {
+        //     str = "";
+        //     for(int j=0;j<mapMatrixZ;j++)
+        //     {
+        //         str = str + GlobalData.mapMatrix[i,j];
+        //     }
+        //     Debug.Log(str);
+        // }
     }
 
     
     void Update()
     {
-        if(monsterHP <= 0)
+        if(GlobalData.monstersHP[int.Parse(transform.name)-1] <= 0)
         {
             selfDestroy();
         }
@@ -87,7 +112,7 @@ public class MonsterScript : MonoBehaviour
         else
         {
             nextDir = getCoordinates(nextX,nextZ) - transform.localPosition;
-            transform.Translate(nextDir.normalized * Time.deltaTime*2);
+            transform.Translate(nextDir.normalized * Time.deltaTime * moveSpeed);
         }
     }
 }

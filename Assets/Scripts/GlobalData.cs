@@ -23,16 +23,18 @@ public static class GlobalData
     public static int finishX;
     public static int finishZ;
     public static float[,] mapMatrixCordinates = new float[10,10];
-    public static int playerHP = 40;               //// Player main tower Health Points; 
+    public static int playerHP = 10;               //// Player main tower Health Points; 
     public static int gold = 0;                    //// Player golds for upgrade towers;
     public static int score = 0;                   //// Player count of destroyed monsters;
-    public static int timeBetweenWaves = 3;       //// Time between monster waves(sec); 
+    public static int timeBetweenWaves = 2;       //// Time between monster waves(sec); 
 
-    public static int X = 5;
+    public static int X = 3;
     public static int monsterHP = 10;
     public static int monsterDamage = 1;
     public static int monsterDeathGold = 1;
+    public static int monsterMovementSpeed = 1;
     public static int monsterCountPerWave;
+    public static int monsterAllStatsAdd = 1;
     public static bool toSpawn = true;
     public static char timeMode = 'W';
     public static Queue monsterRoute = new Queue();
