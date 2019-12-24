@@ -72,6 +72,7 @@ public class MainScript : MonoBehaviour
         if(tmpTime<0)
         {
             tmpTime  = tBW;
+            newLevel();
             GlobalData.timeMode = 'S';                                 ///// change time mode to spawning time
         }
         else
@@ -83,7 +84,7 @@ public class MainScript : MonoBehaviour
     {
         if(GlobalData.toSpawn)
         {
-            Debug.Log(tmpMonsterNum);
+            //Debug.Log(tmpMonsterNum);
             if(tmpMonsterNum > GlobalData.monsterCountPerWave)
             {
                 tmpMonsterNum = 1;
@@ -95,6 +96,7 @@ public class MainScript : MonoBehaviour
                 goTmp.transform.parent = goCells.transform;
                 goTmp.transform.localPosition = getCoordinates(GlobalData.startX,GlobalData.startZ);
                 goTmp.transform.name = tmpMonsterNum.ToString();
+                GlobalData.monstersHP[tmpMonsterNum-1] = GlobalData.monsterHP;
                 GlobalData.toSpawn = false;
                 tmpMonsterNum++;
             }
@@ -102,15 +104,24 @@ public class MainScript : MonoBehaviour
     }
     private void newLevel()
     {
-        //monsterCountPerWave = Random.Range(level, level + GlobalData.X);
-        GlobalData.monsterCountPerWave  = 1;
+        GlobalData.monsterCountPerWave = Random.Range(level, level + GlobalData.X);
+        ////Upgrade monsters
+        int tmpSkillCount = Random.Range(1,4);
+        GlobalData.monsterHP+=GlobalData.monsterAllStatsAdd;
+        if(tmpSkillCount>1)
+        GlobalData.monsterDeathGold+=GlobalData.monsterAllStatsAdd;
+        if(tmpSkillCount>2)
+        GlobalData.monsterDamage+=GlobalData.monsterAllStatsAdd;
+        if(tmpSkillCount>3)
+        GlobalData.monsterMovementSpeed+=GlobalData.monsterAllStatsAdd;
+        GlobalData.monstersHP = new int[GlobalData.monsterCountPerWave];
+        level ++;
     }
     void Start()
     {
         diffX = (mapMatrixX/2);
         diffZ = (mapMatrixZ/2);
         tmpTime = tBW;
-        newLevel();
         generateGameField();
     }
 
