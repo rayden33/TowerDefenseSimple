@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7377993841750893586}
+  - component: {fileID: 6159937675282750129}
   m_Layer: 0
   m_Name: tower_1
   m_TagString: Tower
@@ -32,6 +33,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &6159937675282750129
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2352133721151675667}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.5, y: 1, z: 0.5}
+  m_Center: {x: 0, y: 0.6, z: 0}
 --- !u!1 &2643870731410094761
 GameObject:
   m_ObjectHideFlags: 0
@@ -128,7 +142,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackDamage: 5
   rateOfFire: 2
-  upgradePrice: 10
+  upgradePrice: 30
   upgradeAttackMultiplier: 2
   upgradeROFMultiplier: 2
 --- !u!135 &2480673948929964107
@@ -143,7 +157,7 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 3
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: -2, z: 0}
 --- !u!54 &1812917485782228452
 Rigidbody:
   m_ObjectHideFlags: 0

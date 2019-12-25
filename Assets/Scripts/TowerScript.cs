@@ -17,15 +17,53 @@ public class TowerScript : MonoBehaviour
     private GameObject target;
     private Vector3 direction;
 
-    private void towerUpgrade()
+    public string getStatForUpgrade(string type)
     {
-        attackDamage *= upgradeAttackMultiplier;
-        rateOfFire *= upgradeROFMultiplier;
+        string str="";
+        if(type == "G")
+        {
+            str = "Price: " + upgradePrice.ToString();
+        }
+        else
+        {
+            if(type == "D")
+            {
+                str = attackDamage.ToString();
+                str += " -> ";
+                str += (attackDamage + upgradeAttackMultiplier).ToString();
+            }
+            else
+            {
+                if(type == "A")
+                {
+                    str = rateOfFire.ToString();
+                    str += " -> ";
+                    str += (rateOfFire + upgradeROFMultiplier).ToString();
+                }
+                else
+                {
+                    str = "Lvl: " + towerLevel.ToString();
+                }
+                
+            }
+        }
+        return str;
+    }
+    public void towerUpgrade()
+    {
+        if(GlobalData.gold >= upgradePrice)
+        {
+            towerLevel ++;
+            GlobalData.gold -= upgradePrice;
+            attackDamage += upgradeAttackMultiplier;
+            rateOfFire += upgradeROFMultiplier;
+            secPerFire = 1.0f/rateOfFire;
+        }
     }
     private void fire()
     {
         direction = target.transform.position - transform.position;
-        GlobalData.monstersHP[int.Parse(target.name)-1]--;
+        GlobalData.monstersHP[int.Parse(target.name)-1]-=attackDamage;
         Ray ray = new Ray( transform.position, direction );
         RaycastHit raycastHit;
         Vector3 endPosition = transform.position + ( direction );
@@ -44,7 +82,7 @@ public class TowerScript : MonoBehaviour
         secPerFire = 1.0f/rateOfFire;
     }
 
-    void FixedUpdate()
+    void Update()
     {
         if(targetFind)
         {
@@ -72,6 +110,8 @@ public class TowerScript : MonoBehaviour
     {
         if(col.transform.tag == "Monster" && !targetFind)
         {
+            if(transform.name == "tower_0")
+            Debug.Log(secPerFire);
             targetFind = true;
             target = col.gameObject;
         }

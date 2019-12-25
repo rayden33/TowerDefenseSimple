@@ -1,9 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class MainScript : MonoBehaviour
 {
+    public GameObject towerPanel;
+    public Text txtTowerLevel; 
+    public Text txtUpgradePrice; 
+    public Text txtTowerDmg;
+    public Text txtTowerAS; 
+    public Text txtPlayerHP;
+    public Text txtGold; 
+    public Text txtNextWave;
+    public GameObject gameOverPanel;
+    public Text txtScore;
     public GameObject goCells;
     public GameObject goGround;
     public GameObject goWay;
@@ -19,17 +31,12 @@ public class MainScript : MonoBehaviour
     private float diffX;
     private float diffZ;
     private float tBW = GlobalData.timeBetweenWaves;
-    private float spawnTime = 3;
     private float tmpTime = 0;
-    private char[,] mapTmp = GlobalData.mapMatrix;
+    private bool gamePause = false;
     private Vector3 startPos;
     private Vector3 finishPos;
     private GameObject goTmp;
-    struct Pair
-    {
-        int a;
-        int b;
-    }
+
     private bool checkBorder(int x, int z)
     {
         return (x>=0 && x<mapMatrixX && z>=0 && z<mapMatrixZ);
@@ -62,10 +69,14 @@ public class MainScript : MonoBehaviour
             }
         }
     }
+    public void newGame()
+    {
+        SceneManager.LoadScene("MainScene");
+    }
     private void towerDestroyed()
     {
-        Debug.Log("Game Over");
-        Application.Quit();
+        gameOverPanel.SetActive(true);
+        txtScore.text = "Score: " + GlobalData.score;
     }
     private void waiting()
     {
@@ -84,7 +95,6 @@ public class MainScript : MonoBehaviour
     {
         if(GlobalData.toSpawn)
         {
-            //Debug.Log(tmpMonsterNum);
             if(tmpMonsterNum > GlobalData.monsterCountPerWave)
             {
                 tmpMonsterNum = 1;
@@ -99,6 +109,35 @@ public class MainScript : MonoBehaviour
                 GlobalData.monstersHP[tmpMonsterNum-1] = GlobalData.monsterHP;
                 GlobalData.toSpawn = false;
                 tmpMonsterNum++;
+            }
+        }
+    }
+    private void selectTower()
+    {
+        if (Input.GetMouseButtonUp(0))
+        {
+            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hitInfo;
+            if (Physics.Raycast(ray, out hitInfo))
+            {
+                var hitCol = hitInfo.collider;
+                if(hitCol != null)
+                {
+                    if(hitCol.tag == "Tower")
+                    {
+                        GlobalData.selectedTower = hitCol.gameObject;
+                        var tmpSc = hitCol.gameObject.GetComponentInChildren<TowerScript>();
+                        txtTowerDmg.text = tmpSc.getStatForUpgrade("D");
+                        txtTowerAS.text = tmpSc.getStatForUpgrade("A");
+                        txtUpgradePrice.text = tmpSc.getStatForUpgrade("G");
+                        txtTowerLevel.text = tmpSc.getStatForUpgrade("L");
+                        towerPanel.SetActive(true);
+                    }
+                    else
+                    {
+                        towerPanel.SetActive(false);
+                    }
+                }
             }
         }
     }
@@ -117,16 +156,27 @@ public class MainScript : MonoBehaviour
         GlobalData.monstersHP = new int[GlobalData.monsterCountPerWave];
         level ++;
     }
+    public void towerUpgrade()
+    {
+        GlobalData.selectedTower.GetComponentInChildren<TowerScript>().towerUpgrade();
+    }
     void Start()
     {
+        GlobalData.reloadValues();
         diffX = (mapMatrixX/2);
         diffZ = (mapMatrixZ/2);
         tmpTime = tBW;
         generateGameField();
+        txtNextWave.text = GlobalData.timeBetweenWaves.ToString();
     }
 
     void Update()
     {
+        if(gamePause)
+        return;
+
+        txtPlayerHP.text = GlobalData.playerHP.ToString();
+        txtGold.text = GlobalData.gold.ToString();
         if(GlobalData.playerHP<=0)
         {
             towerDestroyed();
@@ -138,5 +188,6 @@ public class MainScript : MonoBehaviour
             case 'W': waiting();
             break;
         }
+        selectTower();
     }
 }

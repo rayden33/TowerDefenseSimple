@@ -8,6 +8,8 @@ TagManager:
   - Way
   - Tower
   - Monster
+  - Panel
+  - ButtonUpgrade
   layers:
   - Default
   - TransparentFX
