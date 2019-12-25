@@ -57,7 +57,6 @@ public class MonsterScript : MonoBehaviour
     private void damageMainTower()
     {
         GlobalData.playerHP -=  GlobalData.monsterDamage;
-        Debug.Log(GlobalData.playerHP);
         selfDestroy();
     }
     private void selfDestroy()
@@ -94,6 +93,8 @@ public class MonsterScript : MonoBehaviour
     {
         if(GlobalData.monstersHP[int.Parse(transform.name)-1] <= 0)
         {
+            GlobalData.gold+=GlobalData.monsterDeathGold;
+            GlobalData.score++;
             selfDestroy();
         }
         if(Vector3.Distance(transform.position,getCoordinates(nextX,nextZ))<0.2f)
